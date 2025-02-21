@@ -52,7 +52,7 @@ RUN make
 WORKDIR /app/readhistory
 RUN make
 
-EXPOSE 4444
+EXPOSE 7424
 
 # Set default command
 CMD ["./readhistory.exe", "config.json"]

@@ -53,5 +53,7 @@ RUN make
 WORKDIR /app/marketprice
 RUN make
 
+EXPOSE 7416
+
 # Set default command
 CMD ["./marketprice.exe", "config.json"]

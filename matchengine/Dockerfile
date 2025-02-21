@@ -50,5 +50,7 @@ RUN make
 WORKDIR /app/matchengine
 RUN make
 
+EXPOSE 7316
+
 # Set default command
 CMD ["./matchengine.exe", "config.json"]
