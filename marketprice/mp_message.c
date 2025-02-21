@@ -229,9 +229,12 @@ static int load_market(redisContext *context, struct market_info *info)
     return 0;
 }
 
-static struct market_info *create_market(const char *market, mpd_t *price = mpd_zero)
+static struct market_info *create_market(const char *market, mpd_t *price)
 {
     struct market_info *info = malloc(sizeof(struct market_info));
+    if (info == NULL)
+        return NULL;
+
     memset(info, 0, sizeof(struct market_info));
     info->name = strdup(market);
     info->last = mpd_qncopy(price);
@@ -275,6 +278,11 @@ static struct market_info *create_market(const char *market, mpd_t *price = mpd_
 
     sds key = sdsnew(market);
     dict_add(dict_market, key, info);
+
+    if (price == NULL)
+        info->last = mpd_zero;
+    else
+        info->last = price;
 
     return info;
 }
@@ -364,7 +372,7 @@ static int init_market(void)
         json_t *item = json_array_get(r, i);
         const char *name = json_string_value(json_object_get(item, "name"));
         log_stderr("init market %s", name);
-        struct market_info *info = create_market(name);
+        struct market_info *info = create_market(name, NULL);
         if (info == NULL) {
             log_error("create market %s fail", name);
             json_decref(r);
